@@ -1,22 +1,30 @@
 import { FaShareAlt, FaRegEye, FaRegBookmark } from "react-icons/fa";
 import { AiFillStar } from "react-icons/ai";
+import { Link } from "react-router";
 
-const NewsCard = (props = {}) => {
-  const { news } = props || {};
+const NewsCard = ({news}) => {
+  const {
+    title,
+    author,
+    rating,
+    total_view,
+    image_url,
+    details,
+  } = news;
 
   return (
     <div className=" p-4 bg-white rounded-lg shadow-md">
       {/* Author Information */}
       <div className="flex items-center mb-4">
         <img
-          src={news.author.img}
-          alt={news.author.name}
+          src={author.img}
+          alt={author.name}
           className="w-10 h-10 rounded-full mr-3"
         />
         <div>
-          <p className="font-semibold">{news.author.name}</p>
+          <p className="font-semibold">{author.name}</p>
           <p className="text-xs text-gray-500">
-            {new Date(news.author.published_date).toLocaleDateString("en-US", {
+            {new Date(author.published_date).toLocaleDateString("en-US", {
               year: "numeric",
               month: "short",
               day: "numeric",
@@ -30,20 +38,30 @@ const NewsCard = (props = {}) => {
       </div>
 
       {/* Title */}
-      <h2 className="text-xl font-semibold mb-2">{news.title}</h2>
+      <h2 className="text-xl font-semibold mb-2">{title}</h2>
 
       {/* Thumbnail Image */}
       <img
-        src={news.image_url}
+        src={image_url}
         alt="Thumbnail"
         className="w-full  object-cover rounded-lg mb-4"
       />
 
       {/* Details */}
-      <p className="text-gray-700 text-sm mb-4">
-        {news.details.slice(0, 150)}...{" "}
-        <span className="text-primary font-bold">Read More</span>
-      </p>
+      <div className="px-4 text-accent">
+            {
+                details.length > 200 ? (
+                    <>
+                    {details.slice(0,200)}...
+                    <Link to={`/news-details/${news.id}`} className="text-primary font-semibold cursor-pointer hover:underline">
+                        Read More
+                    </Link>
+                    </>
+                ) : (
+                    news.details
+                )
+            }
+      </div>
 
       {/* Ratings and Views */}
       <div className="flex items-center justify-between text-gray-600 text-sm">
@@ -53,17 +71,17 @@ const NewsCard = (props = {}) => {
             <AiFillStar
               key={i}
               className={`text-yellow-500 ${
-                i < Math.round(news.rating.number) ? "" : "opacity-50"
+                i < Math.round(rating.number) ? "" : "opacity-50"
               }`}
             />
           ))}
-          <span className="ml-2 font-semibold">{news.rating.number}</span>
+          <span className="ml-2 font-semibold">{rating.number}</span>
         </div>
 
         {/* Views */}
         <div className="flex items-center">
           <FaRegEye className="mr-1" />
-          <span>{news.total_view}</span>
+          <span>{total_view}</span>
         </div>
       </div>
     </div>
